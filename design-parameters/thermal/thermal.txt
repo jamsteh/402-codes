@@ -1,0 +1,3 @@
+The goals of the thermal subsystem are:
+1. Keep all components and other subsystems within operating temperature ranges
+2. Minimize power consumption within these boundaries.
