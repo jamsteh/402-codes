@@ -1,0 +1,36 @@
+{
+    "antenna_type": "patch",
+    "frequency": {
+        "val": 2.5e9,
+        "units": "Hz"
+    },
+    "transmitter_power": {
+        "val": 1,
+        "units": "W"
+    },
+    "transmitter_line_loss": {
+        "val": -1,
+        "units": "dB"
+    },
+    "transmit_antenna_beamwidth": {
+        "val": 70,
+        "units": "deg"
+    },
+    "transmit_antenna_pointing_offset": {
+        "val": 30,
+        "units": "deg"
+    },
+    "propagation_path_length": {
+        "val": 900e3,
+        "units": "m"
+    },
+    "system_noise_temperature": {
+        "val": 135,
+        "units": "K"
+    },
+    "data_rate": {
+        "val": 24,
+        "units": "Mbps"
+    },
+    "bit_error_rate": 10e-7
+}
