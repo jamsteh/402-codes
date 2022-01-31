@@ -1,0 +1,129 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+
+
+
+
+
+def plot_sun_heat_rate(altitude,alpha,area):
+    '''
+    This function will be used to calculate the total heat rate 
+    from the sun on the satellite during the course of one orbit.
+        
+    '''
+    AU = 149597870 # this is in km
+    earth_mean_distance = 1.0000010178
+    altitude_au = altitude/AU
+    r_range_1 = np.linspace(earth_mean_distance,earth_mean_distance+altitude_au,50)
+    r_range_2 = np.linspace(earth_mean_distance-altitude_au,earth_mean_distance,50)
+    r_range = np.concatenate((r_range_2,r_range_1))
+    print('r range: ',r_range)
+    phi = 1370/(r_range**2)
+    print('phi: ',phi)
+    qdot = phi*alpha*area
+    print(np.shape(qdot))
+    print(qdot)
+    print('Maximum Heat Absorption range in One Orbit From Solar Energy: ',max(qdot)-min(qdot))
+
+
+    plt.figure()
+    plt.plot(r_range,qdot)
+    plt.xlabel('Distance From Sun')
+    plt.ylabel('Heat Absorbed From the Sun')
+    plt.title('Heat Absorbed From the Sun During One Orbit at Altitude = '+str(altitude))
+    plt.show()
+    
+    
+def qdot_in(altitude,A_earth,A_sun):
+    '''
+    This function will be used to calculate the total heat rate qdot_in, which can be used to determine equilibrium
+    temperature, which can lead to more calculations for necessary internal heater or radiator specifications
+
+    Formula: qdot_in = qdot_sun + qdot_alb + qdot_earth + qdot_int
+    
+    qdot_sun = phi_s * alpha_vnir * A_sun
+    phi_s = 1370/(AU^2) where AU is the distance from the sun in AU
+    alpha_vnir is a property of the material. For aluminum, it is approximately 0.09, and for solar cells it is ()
+    A_sun is the area perpendicular to the sun
+
+    qdot_alb = phi_s * R * alpha_vnir * A_earth
+    R is the albedo factor, which ranges from 0.2 to 0.6 based off of orbit and spacecraft altitude
+    A_earth is area perpendicular to the sun
+
+    qdot_earth = e_earth * sigma * T_earth^4 * F * alpha_tir * A_earth
+    e_earth is the emissivity of the earth
+    sigma is the stefan-boltzmann constant
+    T_earth is the temperature of the earth, roughly 255 kelvin
+    F = (Radius of Earth/(radius of earth + h))^2
+    alpha_tir is the absorptivity of the spacecraft material
+    '''
+    
+    earth_mean_distance = 1.0000010178
+    sigma = 5.67e-8 # stefan-boltzmann constant
+    phi_s = 1370/(earth_mean_distance**2)
+    e_earth = 1
+    r_earth = 6378.1 #units are in km
+    F = (r_earth/(r_earth+altitude))**2
+    T_earth = 255
+    alpha = .38
+    e_tir = 0.03
+    R = 0.6
+    
+    qdot_sun = phi_s*alpha*A_sun  # total heat coming from the sun
+    qdot_alb = phi_s*R*alpha*A_earth
+    qdot_earth = e_earth*sigma*T_earth**4 * F * alpha * A_earth
+    qdot_internal = 10
+    qdot_total = qdot_sun+qdot_alb+qdot_earth + qdot_internal
+    print('For Altitude       : ',altitude)
+    print('Material           : Aluminum')
+    print('Heat from the sun  : ',qdot_sun,'W')
+    print('Reflected Heat     : ',qdot_alb,'W')
+    print('Heat from the earth: ',qdot_earth,'W')
+    print('Total Heat In: ',qdot_total,'W')
+    
+    numerator = (phi_s*A_sun)+(phi_s*R*A_earth)+(e_earth*sigma*T_earth**4*((r_earth)/(r_earth+altitude)**2*A_earth)+qdot_internal/alpha)
+    denominator = sigma*313.13**2*0.14
+    print('The required ratio for alpha/e: ',1/(numerator/denominator))
+    
+    
+    
+    
+    
+    return qdot_total
+
+
+
+def equilibrium_temp(qdot_in):
+    '''
+    This function will take the value for heat coming in and calculate what temperature the satellite exterior will reach equilibrium at
+    qdot_in = qdot_out(T)
+
+    qdot_out = e_tir * sigma * T^4 * A
+    e_tir is the emissivity of the exterior surface, which is either aluminum or solar cells
+    sigma is the stefan-boltzmann constant
+    T is the equilibrium temperature
+    A is the area through which heat is radiated
+    '''
+
+    e_tir = 0.67
+    sigma = 5.67e-8
+    A_rad = 0.14
+
+    A_rad_required = qdot_in/(e_tir*sigma*313.33**4)    
+    T = (qdot_in/(e_tir*sigma*A_rad))**(1/4)
+    print('Radiator Area required to dissipate all heat: ',A_rad_required)
+    print('Equilibrium Temperature: ',T,'K',T-273.15,' degrees celsius')
+
+print((313.13**4 * 5.67e-8 * 5)/(1368))
+
+
+qdot_total = qdot_in(800,.01,0.03)
+equilibrium_temp(qdot_total)
+
+
+
+
+
+print('The file has been run, successful test.')
