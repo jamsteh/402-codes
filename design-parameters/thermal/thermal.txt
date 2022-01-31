@@ -1,3 +1,28 @@
 The goals of the thermal subsystem are:
 1. Keep all components and other subsystems within operating temperature ranges
 2. Minimize power consumption within these boundaries.
+
+Need to have:
+- balance temperature
+- surface area of satellite
+
+Assumptions:
+1. satellite is a cube
+2. satellite is absorbing solar energy on one side and radiating
+    on all six sides
+3. 
+
+antenna:
+dipole 
+patch 
+parabolic if high requirement for data rate
+batch 6-8 or 9 db of gain
+can get transmitter that goes with that
+
+antenna / transmitter two most important and influential things
+start with 1 watt and see what it looks like
+start with downlink not uplink
+11 thousand pixels is quite a few
+
+3u, 6u, 12u
+cubesat shop

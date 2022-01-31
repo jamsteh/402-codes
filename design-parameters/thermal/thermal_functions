@@ -116,6 +116,9 @@ def equilibrium_temp(qdot_in):
     print('Radiator Area required to dissipate all heat: ',A_rad_required)
     print('Equilibrium Temperature: ',T,'K',T-273.15,' degrees celsius')
 
+
+
+
 print((313.13**4 * 5.67e-8 * 5)/(1368))
 
 
